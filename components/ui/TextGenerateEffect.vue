@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, defineProps, defineEmits } from "vue";
+import { ref, onMounted, nextTick, defineProps, defineEmits } from "vue";
 import { gsap } from "gsap";
 
-// Props to pass in the text and delay
+// Props, um den Text und die Verzögerung zu übergeben
 const props = defineProps({
   words: {
     type: String,
@@ -14,22 +14,26 @@ const props = defineProps({
   }
 });
 
-// Emit event when animation is complete
+// Event-Emitter für die Fertigstellung der Animation
 const emit = defineEmits(['animationComplete']);
 
-// Split text into an array of words
+// Flag für die Client-Seite
+const isClient = ref(false);
+
+// Array von Wörtern aus dem übergebenen Text erstellen
 const wordsArray = ref(props.words.split(" "));
 
-onMounted(() => {
-  // Access all word elements by using querySelectorAll
+// Animation beim Laden der Komponente starten
+onMounted(async () => {
+  isClient.value = true;
+  await nextTick(); // Sicherstellen, dass das DOM vollständig geladen ist
   const wordElements = document.querySelectorAll('.word');
-
   gsap.to(wordElements, {
     opacity: 1,
     filter: "blur(0px)",
-    stagger: 0.3,
+    stagger: 0.2,
     duration: 3,
-    ease: "bounce.out", // Change the ease function here
+    ease: "bounce.out",
     delay: props.delay,
     onComplete: () => {
       emit('animationComplete');
@@ -39,9 +43,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="font-bold mt-4 text-center">
+  <!-- Render nur auf der Client-Seite mit v-if -->
+  <div v-if="isClient" class="font-bold mt-4 text-center">
     <div class="text-white">
-      <!-- Adding a class "word" to each word span -->
+      <!-- Jeder Textabschnitt erhält die Klasse "word" -->
       <span
         v-for="(word, index) in wordsArray"
         :key="index"
@@ -55,5 +60,5 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Additional CSS if necessary */
+/* Zusätzliche CSS falls benötigt */
 </style>
