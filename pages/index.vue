@@ -17,7 +17,6 @@ import Navbar from '~/components/ui/FolatingNav.vue';
 
     <section id="projects-section">
       <h1>Projects</h1>
-      <SpotlightPreview />
       <!-- Inhalt der Projekte-Sektion -->
     </section>
 
@@ -28,7 +27,6 @@ import Navbar from '~/components/ui/FolatingNav.vue';
 
     <section id="about">
       <h1>about</h1>
-      <SpotlightPreview />
       <!-- Inhalt der Projekte-Sektion -->
     </section>
 
